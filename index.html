@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>InstaSaverX - Instagram Video Downloader</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; margin-top: 50px; }
+    input { width: 80%; padding: 10px; font-size: 16px; }
+    button { padding: 10px 20px; font-size: 16px; margin-top: 10px; }
+    a { display: block; margin-top: 20px; font-size: 18px; color: blue; }
+  </style>
+</head>
+<body>
+  <h1>🎥 InstaSaverX</h1>
+  <p>Paste Instagram post/reel URL below:</p>
+  <input type="text" id="ig_url" placeholder="https://www.instagram.com/reel/xyz/">
+  <br>
+  <button onclick="download()">Download Now</button>
+  <div id="result"></div>
+
+  <script>
+    async function download() {
+      const url = document.getElementById("ig_url").value;
+      document.getElementById("result").innerText = "Fetching video link...";
+      try {
+        const response = await fetch("https://instagram-downloader-download.p.rapidapi.com/rapid/post.php?url=" + encodeURIComponent(url), {
+          method: "GET",
+          headers: {
+            "X-RapidAPI-Key": "97b7d94d2emsheb6f9fcc90803d3p1d0cc6jsn5e2dc4bfad44",
+            "X-RapidAPI-Host": "instagram-downloader-download.p.rapidapi.com"
+          }
+        });
+        const data = await response.json();
+        if (data?.media) {
+          document.getElementById("result").innerHTML = `<a href="${data.media}" target="_blank">👉 Click to Download Video</a>`;
+        } else {
+          document.getElementById("result").innerText = "Error: Invalid link or can't fetch.";
+        }
+      } catch (err) {
+        document.getElementById("result").innerText = "Error: " + err.message;
+      }
+    }
+  </script>
+</body>
+</html>
